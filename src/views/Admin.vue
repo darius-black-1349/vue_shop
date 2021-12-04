@@ -6,7 +6,7 @@
         <img src="../assets/img/avatar_admin.svg" alt="avatar">
         <div class="d-flex flex-column align-items-start w-100">
           <p class="mb-0 fw-bold">Welcome</p>
-          <p class="mb-0">Darius</p>
+          <p class="mb-0">{{ email }}</p>
         </div>
       </div>
       <hr class="mx-auto my-3 bg-white" style="width: 85%;"/>
@@ -36,10 +36,8 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/logout">
             <i class="fa fa-power-off mx-2 text-white"></i>
-            <a>Logout</a>
-          </router-link>
+            <a href="" @click="logout">Logout</a>
         </li>
       </u>
     </div>
@@ -51,10 +49,43 @@
 </template>
 
 <script>
-
+import {auth} from '../firebase'
+import { signOut } from 'firebase/auth'
 
 export default {
   name: 'Admin',
+
+   data(){
+      return{
+          name:null,
+          email:null,
+      }
+  },
+
+  methods: {
+
+    logout() {
+
+      signOut(auth).then(() => {
+
+        this.$router.replace("/")
+
+      }).catch((err) => {
+
+        console.log(err);
+
+      })
+
+
+    }
+
+  },
+
+  created() {
+
+    let user = auth.currentUser
+    this.email = user.email
+  }
 }
 </script>
 

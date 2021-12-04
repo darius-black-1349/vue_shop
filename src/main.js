@@ -8,4 +8,18 @@ window.$ = window.jQuery = jQuery;
 import "./assets/App.scss";
 import "./assets/App"
 
-createApp(App).use(router).mount("#app");
+import {auth} from "./firebase"
+
+let app = "";
+
+auth.onAuthStateChanged((user) => {
+
+    if(!app) {
+
+
+        createApp(App).use(router).mount("#app");
+
+    }
+
+})
+

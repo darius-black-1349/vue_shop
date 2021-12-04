@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
+import {auth} from '../firebase'
 
 const routes = [
   {
@@ -21,6 +22,7 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: () => import("../views/Admin.vue"),
+    meta: { requiresAuth: true },
     
     children: [
 
@@ -56,5 +58,26 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+router.beforeEach(async (to, from, next) => {
+  
+  const requiresAuth = await to.matched.some(record => record.meta.requiresAuth)
+  const currentUser = await auth.currentUser
+
+  if(requiresAuth && !currentUser) {
+
+
+    next('/')
+
+  } else if (requiresAuth && currentUser) {
+
+    next()
+
+  } else {
+
+    next()
+  }
+
+})
 
 export default router;
